@@ -77,7 +77,7 @@ begin
 
   SET_WIRES:  
   for I in 0 to 4679 generate
-    reg_file_w(I) <= pix_data(I*8) & pix_data(I*8 + 1) & pix_data(I*8 + 2) & pix_data(I*8 + 3) & pix_data(I*8 + 4) & pix_data(I*8 + 5) & pix_data(I*8 + 6) & pix_data(I*8 + 7);
+    reg_file_w(I) <= pix_data(I*8 + 7) & pix_data(I*8 + 6) & pix_data(I*8 + 5) & pix_data(I*8 + 4) & pix_data(I*8 + 3) & pix_data(I*8 + 2) & pix_data(I*8 + 1) & pix_data(I*8);
     
   end generate SET_WIRES;
   

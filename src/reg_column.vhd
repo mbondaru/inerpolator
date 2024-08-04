@@ -108,6 +108,12 @@ REG2: register_8b port map (REG_IN => reg_in2, LD => ld_w(2), CLK => CLK, REG_OU
 REG3: register_8b port map (REG_IN => reg_in3, LD => ld_w(3), CLK => CLK, REG_OUT => reg_out3);
 REG4: register_8b port map (REG_IN => reg_in4, LD => ld_w(4), CLK => CLK, REG_OUT => reg_out4);
 REG5: register_8b port map (REG_IN => reg_in5, LD => ld_w(5), CLK => CLK, REG_OUT => reg_out5);
+   D_OUT0 <= reg_out0;
+   D_OUT1 <= reg_out1;
+   D_OUT2 <= reg_out2;
+   D_OUT3 <= reg_out3;
+   D_OUT4 <= reg_out4;
+   D_OUT5 <= reg_out5;
 
   
 
