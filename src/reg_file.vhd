@@ -82,59 +82,59 @@ begin
       D_OUT5 => outw(I + 3900)
      );
      
-  PIX_DATA(I*8 + 7) <= outw(I)(7);
-  PIX_DATA(I*8 + 6) <= outw(I)(6);
-  PIX_DATA(I*8 + 5) <= outw(I)(5);
-  PIX_DATA(I*8 + 4) <= outw(I)(4);
-  PIX_DATA(I*8 + 3) <= outw(I)(3);
-  PIX_DATA(I*8 + 2) <= outw(I)(2);
-  PIX_DATA(I*8 + 1) <= outw(I)(1);
-  PIX_DATA(I*8 + 0) <= outw(I)(0);
+  PIX_DATA(I*8 + 7) <= outw(I)(0);
+  PIX_DATA(I*8 + 6) <= outw(I)(1);
+  PIX_DATA(I*8 + 5) <= outw(I)(2);
+  PIX_DATA(I*8 + 4) <= outw(I)(3);
+  PIX_DATA(I*8 + 3) <= outw(I)(4);
+  PIX_DATA(I*8 + 2) <= outw(I)(5);
+  PIX_DATA(I*8 + 1) <= outw(I)(6);
+  PIX_DATA(I*8 + 0) <= outw(I)(7);
   
-  PIX_DATA(I*8 + 780*8 + 7) <= outw(I + 780)(7);
-  PIX_DATA(I*8 + 780*8 + 6) <= outw(I + 780)(6);
-  PIX_DATA(I*8 + 780*8 + 5) <= outw(I + 780)(5);
-  PIX_DATA(I*8 + 780*8 + 4) <= outw(I + 780)(4);
-  PIX_DATA(I*8 + 780*8 + 3) <= outw(I + 780)(3);
-  PIX_DATA(I*8 + 780*8 + 2) <= outw(I + 780)(2);
-  PIX_DATA(I*8 + 780*8 + 1) <= outw(I + 780)(1);
-  PIX_DATA(I*8 + 780*8 + 0) <= outw(I + 780)(0);
+  PIX_DATA(I*8 + 780*8 + 7) <= outw(I + 780)(0);
+  PIX_DATA(I*8 + 780*8 + 6) <= outw(I + 780)(1);
+  PIX_DATA(I*8 + 780*8 + 5) <= outw(I + 780)(2);
+  PIX_DATA(I*8 + 780*8 + 4) <= outw(I + 780)(3);
+  PIX_DATA(I*8 + 780*8 + 3) <= outw(I + 780)(4);
+  PIX_DATA(I*8 + 780*8 + 2) <= outw(I + 780)(5);
+  PIX_DATA(I*8 + 780*8 + 1) <= outw(I + 780)(6);
+  PIX_DATA(I*8 + 780*8 + 0) <= outw(I + 780)(7);
   
-  PIX_DATA(I*8 + 1560*8 + 7) <= outw(I + 1560)(7);
-  PIX_DATA(I*8 + 1560*8 + 6) <= outw(I + 1560)(6);
-  PIX_DATA(I*8 + 1560*8 + 5) <= outw(I + 1560)(5);
-  PIX_DATA(I*8 + 1560*8 + 4) <= outw(I + 1560)(4);
-  PIX_DATA(I*8 + 1560*8 + 3) <= outw(I + 1560)(3);
-  PIX_DATA(I*8 + 1560*8 + 2) <= outw(I + 1560)(2);
-  PIX_DATA(I*8 + 1560*8 + 1) <= outw(I + 1560)(1);
-  PIX_DATA(I*8 + 1560*8 + 0) <= outw(I + 1560)(0);
+  PIX_DATA(I*8 + 1560*8 + 7) <= outw(I + 1560)(0);
+  PIX_DATA(I*8 + 1560*8 + 6) <= outw(I + 1560)(1);
+  PIX_DATA(I*8 + 1560*8 + 5) <= outw(I + 1560)(2);
+  PIX_DATA(I*8 + 1560*8 + 4) <= outw(I + 1560)(3);
+  PIX_DATA(I*8 + 1560*8 + 3) <= outw(I + 1560)(4);
+  PIX_DATA(I*8 + 1560*8 + 2) <= outw(I + 1560)(5);
+  PIX_DATA(I*8 + 1560*8 + 1) <= outw(I + 1560)(6);
+  PIX_DATA(I*8 + 1560*8 + 0) <= outw(I + 1560)(7);
   
-  PIX_DATA(I*8 + 2340*8 + 7) <= outw(I + 2340)(7);
-  PIX_DATA(I*8 + 2340*8 + 6) <= outw(I + 2340)(6);
-  PIX_DATA(I*8 + 2340*8 + 5) <= outw(I + 2340)(5);
-  PIX_DATA(I*8 + 2340*8 + 4) <= outw(I + 2340)(4);
-  PIX_DATA(I*8 + 2340*8 + 3) <= outw(I + 2340)(3);
-  PIX_DATA(I*8 + 2340*8 + 2) <= outw(I + 2340)(2);
-  PIX_DATA(I*8 + 2340*8 + 1) <= outw(I + 2340)(1);
-  PIX_DATA(I*8 + 2340*8 + 0) <= outw(I + 2340)(0);
+  PIX_DATA(I*8 + 2340*8 + 7) <= outw(I + 2340)(0);
+  PIX_DATA(I*8 + 2340*8 + 6) <= outw(I + 2340)(1);
+  PIX_DATA(I*8 + 2340*8 + 5) <= outw(I + 2340)(2);
+  PIX_DATA(I*8 + 2340*8 + 4) <= outw(I + 2340)(3);
+  PIX_DATA(I*8 + 2340*8 + 3) <= outw(I + 2340)(4);
+  PIX_DATA(I*8 + 2340*8 + 2) <= outw(I + 2340)(5);
+  PIX_DATA(I*8 + 2340*8 + 1) <= outw(I + 2340)(6);
+  PIX_DATA(I*8 + 2340*8 + 0) <= outw(I + 2340)(7);
   
-  PIX_DATA(I*8 + 3120*8 + 7) <= outw(I + 3120)(7);
-  PIX_DATA(I*8 + 3120*8 + 6) <= outw(I + 3120)(6);
-  PIX_DATA(I*8 + 3120*8 + 5) <= outw(I + 3120)(5);
-  PIX_DATA(I*8 + 3120*8 + 4) <= outw(I + 3120)(4);
-  PIX_DATA(I*8 + 3120*8 + 3) <= outw(I + 3120)(3);
-  PIX_DATA(I*8 + 3120*8 + 2) <= outw(I + 3120)(2);
-  PIX_DATA(I*8 + 3120*8 + 1) <= outw(I + 3120)(1);
-  PIX_DATA(I*8 + 3120*8 + 0) <= outw(I + 3120)(0);
+  PIX_DATA(I*8 + 3120*8 + 7) <= outw(I + 3120)(0);
+  PIX_DATA(I*8 + 3120*8 + 6) <= outw(I + 3120)(1);
+  PIX_DATA(I*8 + 3120*8 + 5) <= outw(I + 3120)(2);
+  PIX_DATA(I*8 + 3120*8 + 4) <= outw(I + 3120)(3);
+  PIX_DATA(I*8 + 3120*8 + 3) <= outw(I + 3120)(4);
+  PIX_DATA(I*8 + 3120*8 + 2) <= outw(I + 3120)(5);
+  PIX_DATA(I*8 + 3120*8 + 1) <= outw(I + 3120)(6);
+  PIX_DATA(I*8 + 3120*8 + 0) <= outw(I + 3120)(7);
   
-  PIX_DATA(I*8 + 3900*8 + 7) <= outw(I + 3900)(7);
-  PIX_DATA(I*8 + 3900*8 + 6) <= outw(I + 3900)(6);
-  PIX_DATA(I*8 + 3900*8 + 5) <= outw(I + 3900)(5);
-  PIX_DATA(I*8 + 3900*8 + 4) <= outw(I + 3900)(4);
-  PIX_DATA(I*8 + 3900*8 + 3) <= outw(I + 3900)(3);
-  PIX_DATA(I*8 + 3900*8 + 2) <= outw(I + 3900)(2);
-  PIX_DATA(I*8 + 3900*8 + 1) <= outw(I + 3900)(1);
-  PIX_DATA(I*8 + 3900*8 + 0) <= outw(I + 3900)(0);
+  PIX_DATA(I*8 + 3900*8 + 7) <= outw(I + 3900)(0);
+  PIX_DATA(I*8 + 3900*8 + 6) <= outw(I + 3900)(1);
+  PIX_DATA(I*8 + 3900*8 + 5) <= outw(I + 3900)(2);
+  PIX_DATA(I*8 + 3900*8 + 4) <= outw(I + 3900)(3);
+  PIX_DATA(I*8 + 3900*8 + 3) <= outw(I + 3900)(4);
+  PIX_DATA(I*8 + 3900*8 + 2) <= outw(I + 3900)(5);
+  PIX_DATA(I*8 + 3900*8 + 1) <= outw(I + 3900)(6);
+  PIX_DATA(I*8 + 3900*8 + 0) <= outw(I + 3900)(7);
   
   end generate GEN_REG;
 
