@@ -56,7 +56,7 @@ set_property used_in_implementation false [get_files /home/bimbom/Desktop/reg_fi
 set_param ips.enableIPCacheLiteLoad 0
 close [open __synthesis_is_running__ w]
 
-synth_design -top interpolator -part xc7a50tcsg325-2L
+synth_design -top interpolator -part xc7a50tcsg325-2L -verbose
 
 
 # disable binary constraint mode for synth run checkpoints

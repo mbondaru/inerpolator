@@ -75,11 +75,11 @@ signal interp_w_gbrg : interp_w_t;
 
 begin
 
-  SET_WIRES:  
-  for I in 0 to 4679 generate
-    reg_file_w(I) <= pix_data(I*8 + 7) & pix_data(I*8 + 6) & pix_data(I*8 + 5) & pix_data(I*8 + 4) & pix_data(I*8 + 3) & pix_data(I*8 + 2) & pix_data(I*8 + 1) & pix_data(I*8);
+  --SET_WIRES:  
+  --for I in 0 to 4679 generate
+  --  reg_file_w(I) <= pix_data(I*8 + 7) & pix_data(I*8 + 6) & pix_data(I*8 + 5) & pix_data(I*8 + 4) & pix_data(I*8 + 3) & pix_data(I*8 + 2) & pix_data(I*8 + 1) & pix_data(I*8);
     
-  end generate SET_WIRES;
+  --end generate SET_WIRES;
   
   RFX: reg_file port map(D_IN => D_IN, CLK => CLK, PIX_DATA => pix_data);
   
@@ -87,111 +87,111 @@ begin
   
   GEN_CONV_WIRES:
   for I in 0 to 2495 generate 
-     creg_file_w(I) <= cpix_data(I*8 + 7) & cpix_data(I*8 + 6) & cpix_data(I*8 + 5) & cpix_data(I*8 + 4) & cpix_data(I*8 + 3) & cpix_data(I*8 + 2) & cpix_data(I*8 + 1) & cpix_data(I*8);
+     creg_file_w(I) <= cpix_data(I*8) & cpix_data(I*8 + 1) & cpix_data(I*8 + 2) & cpix_data(I*8 + 3) & cpix_data(I*8 + 4) & cpix_data(I*8 + 5) & cpix_data(I*8 + 6) & cpix_data(I*8 + 7);
   end generate GEN_CONV_WIRES;
   
   GEN_INTRX:
   for I in 0 to 77 generate
   
   -- row 1
-    BX0: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1), CLOSER => creg_file_w(I*10 + 1248 + 1), FARTHEST => creg_file_w(I*10 + 3), RES => interp_w_brbr(I*10));
-    RX0: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 624), CLOSER => creg_file_w(I*10 + 624 + 2), FARTHEST => creg_file_w(I*10 + 1872), RES => interp_w_gbrg(I*10));
+    BX0: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1), CLOSER => creg_file_w(I*8 + 1248 + 1), FARTHEST => creg_file_w(I*8 + 3), RES => interp_w_brbr(I*8));
+    RX0: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 624), CLOSER => creg_file_w(I*8 + 624 + 2), FARTHEST => creg_file_w(I*8 + 1872), RES => interp_w_gbrg(I*8));
     
-    RX1: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 624), CLOSER => creg_file_w(I*10 + 1872 + 2), FARTHEST => creg_file_w(I*10 + 1872 + 4), RES => interp_w_brbr(I*10 + 1));
-    GX1: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 2), CLOSER => creg_file_w(I*10 + 624 + 3), FARTHEST => creg_file_w(I*10 + 4), RES => interp_w_gbrg(I*10 + 1));
+    RX1: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 624), CLOSER => creg_file_w(I*8 + 1872 + 2), FARTHEST => creg_file_w(I*8 + 1872 + 4), RES => interp_w_brbr(I*8 + 1));
+    GX1: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 2), CLOSER => creg_file_w(I*8 + 624 + 3), FARTHEST => creg_file_w(I*8 + 4), RES => interp_w_gbrg(I*8 + 1));
     
-    BX2: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 3), CLOSER => creg_file_w(I*10 + 1248 + 3), FARTHEST => creg_file_w(I*10 + 5), RES => interp_w_brbr(I*10 + 2));
-    RX2: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 624 + 2), CLOSER => creg_file_w(I*10 + 624), FARTHEST => creg_file_w(I*10 + 1872 + 2), RES => interp_w_gbrg(I*10 + 2));
+    BX2: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 3), CLOSER => creg_file_w(I*8 + 1248 + 3), FARTHEST => creg_file_w(I*8 + 5), RES => interp_w_brbr(I*8 + 2));
+    RX2: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 624 + 2), CLOSER => creg_file_w(I*8 + 624), FARTHEST => creg_file_w(I*8 + 1872 + 2), RES => interp_w_gbrg(I*8 + 2));
     
-    RX3: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 624 + 4), CLOSER => creg_file_w(I*10 + 624 + 7), FARTHEST => creg_file_w(I*10 + 1872 + 6), RES => interp_w_brbr(I*10 + 3));
-    GX3: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 4), CLOSER => creg_file_w(I*10 + 624 + 5), FARTHEST => creg_file_w(I*10 + 6), RES => interp_w_gbrg(I*10 + 3));
+    RX3: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 624 + 4), CLOSER => creg_file_w(I*8 + 624 + 7), FARTHEST => creg_file_w(I*8 + 1872 + 6), RES => interp_w_brbr(I*8 + 3));
+    GX3: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 4), CLOSER => creg_file_w(I*8 + 624 + 5), FARTHEST => creg_file_w(I*8 + 6), RES => interp_w_gbrg(I*8 + 3));
     
-    BX4: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 5), CLOSER => creg_file_w(I*10 + 1248 + 5), FARTHEST => creg_file_w(I*10 + 7), RES => interp_w_brbr(I*10 + 4));
-    RX4: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 624 + 4), CLOSER => creg_file_w(I*10 + 624 + 2), FARTHEST => creg_file_w(I*10 + 1872 + 4), RES => interp_w_gbrg(I*10 + 4));
+    BX4: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 5), CLOSER => creg_file_w(I*8 + 1248 + 5), FARTHEST => creg_file_w(I*8 + 7), RES => interp_w_brbr(I*8 + 4));
+    RX4: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 624 + 4), CLOSER => creg_file_w(I*8 + 624 + 2), FARTHEST => creg_file_w(I*8 + 1872 + 4), RES => interp_w_gbrg(I*8 + 4));
     
-    RX5: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 624 + 6), CLOSER => creg_file_w(I*10 + 1872 + 6), FARTHEST => creg_file_w(I*10 + 1872 + 2), RES => interp_w_brbr(I*10 + 5));
-    GX5: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 6), CLOSER => creg_file_w(I*10 + 624 + 6), FARTHEST => creg_file_w(I*10 + 2), RES => interp_w_gbrg(I*10 + 5));
+    RX5: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 624 + 6), CLOSER => creg_file_w(I*8 + 1872 + 6), FARTHEST => creg_file_w(I*8 + 1872 + 2), RES => interp_w_brbr(I*8 + 5));
+    GX5: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 6), CLOSER => creg_file_w(I*8 + 624 + 6), FARTHEST => creg_file_w(I*8 + 2), RES => interp_w_gbrg(I*8 + 5));
     
-    BX6: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 7), CLOSER => creg_file_w(I*10 + 1248 + 7), FARTHEST => creg_file_w(I*10 + 3), RES => interp_w_brbr(I*10 + 6));
-    RX6: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 624 + 6), CLOSER => creg_file_w(I*10 + 624 + 4), FARTHEST => creg_file_w(I*10 + 1872 + 6), RES => interp_w_gbrg(I*10 + 6));
+    BX6: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 7), CLOSER => creg_file_w(I*8 + 1248 + 7), FARTHEST => creg_file_w(I*8 + 3), RES => interp_w_brbr(I*8 + 6));
+    RX6: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 624 + 6), CLOSER => creg_file_w(I*8 + 624 + 4), FARTHEST => creg_file_w(I*8 + 1872 + 6), RES => interp_w_gbrg(I*8 + 6));
     
-    RX7: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 624 + 6), CLOSER => creg_file_w(I*10 + 1872 + 6), FARTHEST => creg_file_w(I*10 + 1872 + 4), RES => interp_w_brbr(I*10 + 7));
-    GX7: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 624 + 7), CLOSER => creg_file_w(I*10 + 1248 + 6), FARTHEST => creg_file_w(I*10 + 1872 + 7), RES => interp_w_gbrg(I*10 + 7));
+    RX7: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 624 + 6), CLOSER => creg_file_w(I*8 + 1872 + 6), FARTHEST => creg_file_w(I*8 + 1872 + 4), RES => interp_w_brbr(I*8 + 7));
+    GX7: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 624 + 7), CLOSER => creg_file_w(I*8 + 1248 + 6), FARTHEST => creg_file_w(I*8 + 1872 + 7), RES => interp_w_gbrg(I*8 + 7));
     
     --row 2
-    BX8: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1), CLOSER => creg_file_w(I*10 + 3), FARTHEST => creg_file_w(I*10 + 5), RES => interp_w_brbr(I*10+ 624));
-    GX8: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 624 + 1), CLOSER => creg_file_w(I*10 + 1248 + 2), FARTHEST => creg_file_w(I*10 + 624 + 3), RES => interp_w_gbrg(I*10+ 624));
+    BX8: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1), CLOSER => creg_file_w(I*8 + 3), FARTHEST => creg_file_w(I*8 + 5), RES => interp_w_brbr(I*8+ 624));
+    GX8: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 624 + 1), CLOSER => creg_file_w(I*8 + 1248 + 2), FARTHEST => creg_file_w(I*8 + 624 + 3), RES => interp_w_gbrg(I*8+ 624));
     
-    RX9: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 624), CLOSER => creg_file_w(I*10 + 1872 + 2), FARTHEST => creg_file_w(I*10 + 624 + 4), RES => interp_w_brbr(I*10+ 624 + 1));
-    BX9: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1248 + 1), CLOSER => creg_file_w(I*10 + 1248 + 3), FARTHEST => creg_file_w(I*10 + 1248 + 5), RES => interp_w_gbrg(I*10+ 624 + 1));
+    RX9: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 624), CLOSER => creg_file_w(I*8 + 1872 + 2), FARTHEST => creg_file_w(I*8 + 624 + 4), RES => interp_w_brbr(I*8+ 624 + 1));
+    BX9: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1248 + 1), CLOSER => creg_file_w(I*8 + 1248 + 3), FARTHEST => creg_file_w(I*8 + 1248 + 5), RES => interp_w_gbrg(I*8+ 624 + 1));
     
-    BX10: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1248 +1), CLOSER => creg_file_w(I*10 + 1248 + 5), FARTHEST => creg_file_w(I*10 + 1248 + 7), RES => interp_w_brbr(I*10+ 624 + 2));
-    GX10: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 624 + 3), CLOSER => creg_file_w(I*10 + 1248 + 4), FARTHEST => creg_file_w(I*10 + 624 + 5), RES => interp_w_gbrg(I*10+ 624 + 2));
+    BX10: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1248 +1), CLOSER => creg_file_w(I*8 + 1248 + 5), FARTHEST => creg_file_w(I*8 + 1248 + 7), RES => interp_w_brbr(I*8+ 624 + 2));
+    GX10: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 624 + 3), CLOSER => creg_file_w(I*8 + 1248 + 4), FARTHEST => creg_file_w(I*8 + 624 + 5), RES => interp_w_gbrg(I*8+ 624 + 2));
     
-    RX11: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 624 + 4), CLOSER => creg_file_w(I*10 + 1872 + 4), FARTHEST => creg_file_w(I*10 + 624 + 6), RES => interp_w_brbr(I*10 + 624+ 3));
-    BX11: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 3), CLOSER => creg_file_w(I*10 + 5), FARTHEST => creg_file_w(I*10 + 7), RES => interp_w_gbrg(I*10 + 624+ 3));
+    RX11: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 624 + 4), CLOSER => creg_file_w(I*8 + 1872 + 4), FARTHEST => creg_file_w(I*8 + 624 + 6), RES => interp_w_brbr(I*8 + 624+ 3));
+    BX11: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 3), CLOSER => creg_file_w(I*8 + 5), FARTHEST => creg_file_w(I*8 + 7), RES => interp_w_gbrg(I*8 + 624+ 3));
     
-    BX12: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 5), CLOSER => creg_file_w(I*10 + 1248 + 1), FARTHEST => creg_file_w(I*10 + 1), RES => interp_w_brbr(I*10 + 624+ 4));
-    GX12: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 624 + 5), CLOSER => creg_file_w(I*10 + 1248 + 6), FARTHEST => creg_file_w(I*10 + 624 + 7), RES => interp_w_gbrg(I*10+ 624 + 4));
+    BX12: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 5), CLOSER => creg_file_w(I*8 + 1248 + 1), FARTHEST => creg_file_w(I*8 + 1), RES => interp_w_brbr(I*8 + 624+ 4));
+    GX12: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 624 + 5), CLOSER => creg_file_w(I*8 + 1248 + 6), FARTHEST => creg_file_w(I*8 + 624 + 7), RES => interp_w_gbrg(I*8+ 624 + 4));
     
-    RX13: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 624 + 6), CLOSER => creg_file_w(I*10 + 1872 + 6), FARTHEST => creg_file_w(I*10 + 624 + 2), RES => interp_w_brbr(I*10+ 624 + 5));
-    BX13: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1248 + 5), CLOSER => creg_file_w(I*10 + 1248 + 7), FARTHEST => creg_file_w(I*10 + 1248 + 1), RES => interp_w_gbrg(I*10 + 624+ 5));
+    RX13: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 624 + 6), CLOSER => creg_file_w(I*8 + 1872 + 6), FARTHEST => creg_file_w(I*8 + 624 + 2), RES => interp_w_brbr(I*8+ 624 + 5));
+    BX13: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1248 + 5), CLOSER => creg_file_w(I*8 + 1248 + 7), FARTHEST => creg_file_w(I*8 + 1248 + 1), RES => interp_w_gbrg(I*8 + 624+ 5));
     
-    BX14: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 7), CLOSER => creg_file_w(I*10 + 1248 + 3), FARTHEST => creg_file_w(I*10 + 1248 + 1), RES => interp_w_brbr(I*10 + 624+ 6));
-    GX14: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1248 + 6), CLOSER => creg_file_w(I*10 + 4), FARTHEST => creg_file_w(I*10 + 624 + 3), RES => interp_w_gbrg(I*10+ 624 + 6));
+    BX14: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 7), CLOSER => creg_file_w(I*8 + 1248 + 3), FARTHEST => creg_file_w(I*8 + 1248 + 1), RES => interp_w_brbr(I*8 + 624+ 6));
+    GX14: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1248 + 6), CLOSER => creg_file_w(I*8 + 4), FARTHEST => creg_file_w(I*8 + 624 + 3), RES => interp_w_gbrg(I*8+ 624 + 6));
     
-    RX15: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 624 + 6), CLOSER => creg_file_w(I*10 + 1872 + 6), FARTHEST => creg_file_w(I*10 + 624 + 4), RES => interp_w_brbr(I*10 + 624+ 7));
-    BX15: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1248 + 7), CLOSER => creg_file_w(I*10 + 1248 + 5), FARTHEST => creg_file_w(I*10 + 1248 + 3), RES => interp_w_gbrg(I*10 + 624+ 7));
+    RX15: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 624 + 6), CLOSER => creg_file_w(I*8 + 1872 + 6), FARTHEST => creg_file_w(I*8 + 624 + 4), RES => interp_w_brbr(I*8 + 624+ 7));
+    BX15: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1248 + 7), CLOSER => creg_file_w(I*8 + 1248 + 5), FARTHEST => creg_file_w(I*8 + 1248 + 3), RES => interp_w_gbrg(I*8 + 624+ 7));
     
     --row 3
-    BX16: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1248 + 1), CLOSER => creg_file_w(I*10 + 1), FARTHEST => creg_file_w(I*10 + 1248 + 3), RES => interp_w_brbr(I*10 + 1248));
-    RX16: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 624), CLOSER => creg_file_w(I*10 + 624 + 2), FARTHEST => creg_file_w(I*10 + 624 + 4), RES => interp_w_gbrg(I*10 + 1248));
+    BX16: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1248 + 1), CLOSER => creg_file_w(I*8 + 1), FARTHEST => creg_file_w(I*8 + 1248 + 3), RES => interp_w_brbr(I*8 + 1248));
+    RX16: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 624), CLOSER => creg_file_w(I*8 + 624 + 2), FARTHEST => creg_file_w(I*8 + 624 + 4), RES => interp_w_gbrg(I*8 + 1248));
     
-    RX17: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 624 + 2), CLOSER => creg_file_w(I*10 + 1872 + 4), FARTHEST => creg_file_w(I*10 + 1872 + 6), RES => interp_w_brbr(I*10 + 1248+ 1));
-    GX17: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1248 + 2), CLOSER => creg_file_w(I*10 + 1872 + 3), FARTHEST => creg_file_w(I*10 + 1248 + 5), RES => interp_w_gbrg(I*10+ 1248 + 1));
+    RX17: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 624 + 2), CLOSER => creg_file_w(I*8 + 1872 + 4), FARTHEST => creg_file_w(I*8 + 1872 + 6), RES => interp_w_brbr(I*8 + 1248+ 1));
+    GX17: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1248 + 2), CLOSER => creg_file_w(I*8 + 1872 + 3), FARTHEST => creg_file_w(I*8 + 1248 + 5), RES => interp_w_gbrg(I*8+ 1248 + 1));
     
-    BX18: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1248 + 3), CLOSER => creg_file_w(I*10 + 3), FARTHEST => creg_file_w(I*10 + 1248 + 5), RES => interp_w_brbr(I*10+ 1248 + 2));
-    RX18: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 624 + 2), CLOSER => creg_file_w(I*10 + 624 + 4), FARTHEST => creg_file_w(I*10 + 624 + 6), RES => interp_w_gbrg(I*10 + 1248+ 2));
+    BX18: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1248 + 3), CLOSER => creg_file_w(I*8 + 3), FARTHEST => creg_file_w(I*8 + 1248 + 5), RES => interp_w_brbr(I*8+ 1248 + 2));
+    RX18: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 624 + 2), CLOSER => creg_file_w(I*8 + 624 + 4), FARTHEST => creg_file_w(I*8 + 624 + 6), RES => interp_w_gbrg(I*8 + 1248+ 2));
     
-    RX19: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1872 + 4), CLOSER => creg_file_w(I*10 + 1872 + 6), FARTHEST => creg_file_w(I*10 + 624), RES => interp_w_brbr(I*10+ 1248 + 3));
-    GX19: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1248 + 4), CLOSER => creg_file_w(I*10 + 1872 + 5), FARTHEST => creg_file_w(I*10 + 1248 + 6), RES => interp_w_gbrg(I*10+ 1248 + 3));
+    RX19: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1872 + 4), CLOSER => creg_file_w(I*8 + 1872 + 6), FARTHEST => creg_file_w(I*8 + 624), RES => interp_w_brbr(I*8+ 1248 + 3));
+    GX19: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1248 + 4), CLOSER => creg_file_w(I*8 + 1872 + 5), FARTHEST => creg_file_w(I*8 + 1248 + 6), RES => interp_w_gbrg(I*8+ 1248 + 3));
     
-    BX20: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1248 + 5), CLOSER => creg_file_w(I*10 + 5), FARTHEST => creg_file_w(I*10 + 1248 + 7), RES => interp_w_brbr(I*10+ 1248 + 4));
-    RX20: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 624 + 4), CLOSER => creg_file_w(I*10 + 624 + 6), FARTHEST => creg_file_w(I*10 + 624), RES => interp_w_gbrg(I*10 + 1248+ 4));
+    BX20: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1248 + 5), CLOSER => creg_file_w(I*8 + 5), FARTHEST => creg_file_w(I*8 + 1248 + 7), RES => interp_w_brbr(I*8+ 1248 + 4));
+    RX20: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 624 + 4), CLOSER => creg_file_w(I*8 + 624 + 6), FARTHEST => creg_file_w(I*8 + 624), RES => interp_w_gbrg(I*8 + 1248+ 4));
     
-    RX21: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 624 + 6), CLOSER => creg_file_w(I*10 + 624 + 2), FARTHEST => creg_file_w(I*10 + 1872), RES => interp_w_brbr(I*10 + 1248+ 5));
-    GX21: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1248 + 4), CLOSER => creg_file_w(I*10 + 4), FARTHEST => creg_file_w(I*10 + 1248 +2), RES => interp_w_gbrg(I*10 + 1248+ 5));
+    RX21: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 624 + 6), CLOSER => creg_file_w(I*8 + 624 + 2), FARTHEST => creg_file_w(I*8 + 1872), RES => interp_w_brbr(I*8 + 1248+ 5));
+    GX21: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1248 + 4), CLOSER => creg_file_w(I*8 + 4), FARTHEST => creg_file_w(I*8 + 1248 +2), RES => interp_w_gbrg(I*8 + 1248+ 5));
     
-    BX22: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1248 + 7), CLOSER => creg_file_w(I*10 + 5), FARTHEST => creg_file_w(I*10 + 3), RES => interp_w_brbr(I*10 + 1248+ 6));
-    RX22: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 624 + 6), CLOSER => creg_file_w(I*10 + 624 + 4), FARTHEST => creg_file_w(I*10 + 1872 + 2), RES => interp_w_gbrg(I*10 + 1248+ 6));
+    BX22: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1248 + 7), CLOSER => creg_file_w(I*8 + 5), FARTHEST => creg_file_w(I*8 + 3), RES => interp_w_brbr(I*8 + 1248+ 6));
+    RX22: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 624 + 6), CLOSER => creg_file_w(I*8 + 624 + 4), FARTHEST => creg_file_w(I*8 + 1872 + 2), RES => interp_w_gbrg(I*8 + 1248+ 6));
     
-    RX23: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 624 + 6), CLOSER => creg_file_w(I*10 + 1872 + 4), FARTHEST => creg_file_w(I*10 + 1872 + 2), RES => interp_w_brbr(I*10 + 1248 + 7));
-    GX23: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1872 + 7), CLOSER => creg_file_w(I*10 + 1872 + 5), FARTHEST => creg_file_w(I*10 + 1248 + 4), RES => interp_w_gbrg(I*10+ 1248 + 7));
+    RX23: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 624 + 6), CLOSER => creg_file_w(I*8 + 1872 + 4), FARTHEST => creg_file_w(I*8 + 1872 + 2), RES => interp_w_brbr(I*8 + 1248 + 7));
+    GX23: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1872 + 7), CLOSER => creg_file_w(I*8 + 1872 + 5), FARTHEST => creg_file_w(I*8 + 1248 + 4), RES => interp_w_gbrg(I*8+ 1248 + 7));
     
     --row 4
-    BX24: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1248 + 1), CLOSER => creg_file_w(I*10 + 1248 + 3), FARTHEST => creg_file_w(I*10 + 1248 + 5), RES => interp_w_brbr(I*10 + 1872));
-    GX24: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1872 + 1), CLOSER => creg_file_w(I*10 + 1248 + 2), FARTHEST => creg_file_w(I*10 + 1872 + 3), RES => interp_w_gbrg(I*10 + 1872));
+    BX24: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1248 + 1), CLOSER => creg_file_w(I*8 + 1248 + 3), FARTHEST => creg_file_w(I*8 + 1248 + 5), RES => interp_w_brbr(I*8 + 1872));
+    GX24: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1872 + 1), CLOSER => creg_file_w(I*8 + 1248 + 2), FARTHEST => creg_file_w(I*8 + 1872 + 3), RES => interp_w_gbrg(I*8 + 1872));
     
-    RX25: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1872), CLOSER => creg_file_w(I*10 + 624), FARTHEST => creg_file_w(I*10 + 1872 + 4), RES => interp_w_brbr(I*10+ 1872 + 1));
-    BX25: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1248 + 1), CLOSER => creg_file_w(I*10 + 1248 + 3), FARTHEST => creg_file_w(I*10 + 1), RES => interp_w_gbrg(I*10 + 1872+ 1));
+    RX25: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1872), CLOSER => creg_file_w(I*8 + 624), FARTHEST => creg_file_w(I*8 + 1872 + 4), RES => interp_w_brbr(I*8+ 1872 + 1));
+    BX25: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1248 + 1), CLOSER => creg_file_w(I*8 + 1248 + 3), FARTHEST => creg_file_w(I*8 + 1), RES => interp_w_gbrg(I*8 + 1872+ 1));
     
-    BX26: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1248 + 1), CLOSER => creg_file_w(I*10 + 1), FARTHEST => creg_file_w(I*10 + 1248 + 7), RES => interp_w_brbr(I*10+ 1872 + 2));
-    GX26: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1248 + 2), CLOSER => creg_file_w(I*10 + 624 + 3), FARTHEST => creg_file_w(I*10 + 2), RES => interp_w_gbrg(I*10 + 1872+ 2));
+    BX26: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1248 + 1), CLOSER => creg_file_w(I*8 + 1), FARTHEST => creg_file_w(I*8 + 1248 + 7), RES => interp_w_brbr(I*8+ 1872 + 2));
+    GX26: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1248 + 2), CLOSER => creg_file_w(I*8 + 624 + 3), FARTHEST => creg_file_w(I*8 + 2), RES => interp_w_gbrg(I*8 + 1872+ 2));
       
-    RX27: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1872 + 4), CLOSER => creg_file_w(I*10 + 624 + 4), FARTHEST => creg_file_w(I*10 + 1872 + 6), RES => interp_w_brbr(I*10 + 1872+ 3));
-    BX27: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1248 + 3), CLOSER => creg_file_w(I*10 + 1248 + 1), FARTHEST => creg_file_w(I*10 + 3), RES => interp_w_gbrg(I*10 + 1872+ 3));
+    RX27: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1872 + 4), CLOSER => creg_file_w(I*8 + 624 + 4), FARTHEST => creg_file_w(I*8 + 1872 + 6), RES => interp_w_brbr(I*8 + 1872+ 3));
+    BX27: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1248 + 3), CLOSER => creg_file_w(I*8 + 1248 + 1), FARTHEST => creg_file_w(I*8 + 3), RES => interp_w_gbrg(I*8 + 1872+ 3));
     
-    BX28: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1248 + 3), CLOSER => creg_file_w(I*10 + 1248 + 1), FARTHEST => creg_file_w(I*10 + 1), RES => interp_w_brbr(I*10 + 1872+ 4));
-    GX28: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1872 + 5), CLOSER => creg_file_w(I*10 + 1248 + 6), FARTHEST => creg_file_w(I*10 + 1872 + 7), RES => interp_w_gbrg(I*10 + 1872+ 4));
+    BX28: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1248 + 3), CLOSER => creg_file_w(I*8 + 1248 + 1), FARTHEST => creg_file_w(I*8 + 1), RES => interp_w_brbr(I*8 + 1872+ 4));
+    GX28: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1872 + 5), CLOSER => creg_file_w(I*8 + 1248 + 6), FARTHEST => creg_file_w(I*8 + 1872 + 7), RES => interp_w_gbrg(I*8 + 1872+ 4));
     
-    RX29: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1872 + 6), CLOSER => creg_file_w(I*10 + 624  + 6), FARTHEST => creg_file_w(I*10 + 1872 + 2), RES => interp_w_brbr(I*10 + 1872+ 5));
-    BX29: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1248 + 5), CLOSER => creg_file_w(I*10 + 1248 + 3), FARTHEST => creg_file_w(I*10 + 3), RES => interp_w_gbrg(I*10 + 1872+ 5));
+    RX29: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1872 + 6), CLOSER => creg_file_w(I*8 + 624  + 6), FARTHEST => creg_file_w(I*8 + 1872 + 2), RES => interp_w_brbr(I*8 + 1872+ 5));
+    BX29: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1248 + 5), CLOSER => creg_file_w(I*8 + 1248 + 3), FARTHEST => creg_file_w(I*8 + 3), RES => interp_w_gbrg(I*8 + 1872+ 5));
     
-    BX30: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1248 + 5), CLOSER => creg_file_w(I*10 + 1248 + 3), FARTHEST => creg_file_w(I*10 + 1248 + 1), RES => interp_w_brbr(I*10 + 1872+ 6));
-    GX30: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1872 + 5), CLOSER => creg_file_w(I*10 + 1248 + 4), FARTHEST => creg_file_w(I*10 + 1872 + 3), RES => interp_w_gbrg(I*10 + 1872+ 6));
+    BX30: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1248 + 5), CLOSER => creg_file_w(I*8 + 1248 + 3), FARTHEST => creg_file_w(I*8 + 1248 + 1), RES => interp_w_brbr(I*8 + 1872+ 6));
+    GX30: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1872 + 5), CLOSER => creg_file_w(I*8 + 1248 + 4), FARTHEST => creg_file_w(I*8 + 1872 + 3), RES => interp_w_gbrg(I*8 + 1872+ 6));
     
-    RX31: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1872 + 6), CLOSER => creg_file_w(I*10 + 624 + 6), FARTHEST => creg_file_w(I*10 + 1872 + 4), RES => interp_w_brbr(I*10 + 1872+ 7));
-    BX31: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*10 + 1248 + 7), CLOSER => creg_file_w(I*10 + 1248 + 5), FARTHEST => creg_file_w(I*10 + 7), RES => interp_w_gbrg(I*10 + 1872+ 7));
+    RX31: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1872 + 6), CLOSER => creg_file_w(I*8 + 624 + 6), FARTHEST => creg_file_w(I*8 + 1872 + 4), RES => interp_w_brbr(I*8 + 1872+ 7));
+    BX31: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1248 + 7), CLOSER => creg_file_w(I*8 + 1248 + 5), FARTHEST => creg_file_w(I*8 + 7), RES => interp_w_gbrg(I*8 + 1872+ 7));
     
   end generate GEN_INTRX;
   
