@@ -34,7 +34,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity reg_column is
   Port ( 
     SHIFT : in std_logic;
-    LD : in std_logic_vector(5 downto 0);
+    LD : in std_logic;
     CLK : in std_logic;
     
     D_IN : in std_logic_vector(7 downto 0);
@@ -64,12 +64,12 @@ architecture Behavioral of reg_column is
   end component;
   
   
-  signal reg_in0 : std_logic_vector(7 downto 0);
-  signal reg_in1 : std_logic_vector(7 downto 0);
-  signal reg_in2 : std_logic_vector(7 downto 0);
-  signal reg_in3 : std_logic_vector(7 downto 0);
-  signal reg_in4 : std_logic_vector(7 downto 0);
-  signal reg_in5 : std_logic_vector(7 downto 0);
+--  signal reg_in0 : std_logic_vector(7 downto 0);
+--  signal reg_in1 : std_logic_vector(7 downto 0);
+--  signal reg_in2 : std_logic_vector(7 downto 0);
+--  signal reg_in3 : std_logic_vector(7 downto 0);
+--  signal reg_in4 : std_logic_vector(7 downto 0);
+--  signal reg_in5 : std_logic_vector(7 downto 0);
    
   signal reg_out0 : std_logic_vector(7 downto 0);
   signal reg_out1 : std_logic_vector(7 downto 0);
@@ -78,36 +78,20 @@ architecture Behavioral of reg_column is
   signal reg_out4 : std_logic_vector(7 downto 0);
   signal reg_out5 : std_logic_vector(7 downto 0);
   
-  signal ld_w : std_logic_vector(5 downto 0) := "111111";
+  signal ld_w : std_logic_vector(4 downto 0) := "00000";
   
 begin
 
-    reg_in0 <= D_IN;
     with SHIFT select
-        reg_in1 <= reg_out0 when '1',
-        D_IN when others;
-    with SHIFT select
-        reg_in2 <= reg_out1 when '1',
-        D_IN when others;
-    with SHIFT select
-        reg_in3 <= reg_out2 when '1',
-        D_IN when others;
-    with SHIFT select
-        reg_in4 <= reg_out3 when '1',
-        D_IN when others;
-    with SHIFT select
-        reg_in5 <= reg_out4 when '1',
-        D_IN when others;
-    with SHIFT select
-        ld_w <= "111111" when '1',
-        LD when others;
+        ld_w <= "11111" when '1',
+        "00000" when others;
         
-REG0: register_8b port map (REG_IN => reg_in0, LD => ld_w(0), CLK => CLK, REG_OUT => reg_out0);
-REG1: register_8b port map (REG_IN => reg_in1, LD => ld_w(1), CLK => CLK, REG_OUT => reg_out1);
-REG2: register_8b port map (REG_IN => reg_in2, LD => ld_w(2), CLK => CLK, REG_OUT => reg_out2);
-REG3: register_8b port map (REG_IN => reg_in3, LD => ld_w(3), CLK => CLK, REG_OUT => reg_out3);
-REG4: register_8b port map (REG_IN => reg_in4, LD => ld_w(4), CLK => CLK, REG_OUT => reg_out4);
-REG5: register_8b port map (REG_IN => reg_in5, LD => ld_w(5), CLK => CLK, REG_OUT => reg_out5);
+REG0: register_8b port map (REG_IN => D_IN, LD => LD, CLK => CLK, REG_OUT => reg_out0);
+REG1: register_8b port map (REG_IN => reg_out0, LD => ld_w(0), CLK => CLK, REG_OUT => reg_out1);
+REG2: register_8b port map (REG_IN => reg_out1, LD => ld_w(1), CLK => CLK, REG_OUT => reg_out2);
+REG3: register_8b port map (REG_IN => reg_out2, LD => ld_w(2), CLK => CLK, REG_OUT => reg_out3);
+REG4: register_8b port map (REG_IN => reg_out3, LD => ld_w(3), CLK => CLK, REG_OUT => reg_out4);
+REG5: register_8b port map (REG_IN => reg_out4, LD => ld_w(4), CLK => CLK, REG_OUT => reg_out5);
    D_OUT0 <= reg_out0;
    D_OUT1 <= reg_out1;
    D_OUT2 <= reg_out2;

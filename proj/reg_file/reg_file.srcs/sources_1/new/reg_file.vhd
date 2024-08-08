@@ -21,6 +21,7 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.numeric_std.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -34,6 +35,9 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity reg_file is
   Port ( 
      D_IN : in std_logic_vector(7 downto 0);
+     COL_NUM : in std_logic_vector(9 downto 0);
+     SHIFT : in std_logic;
+     LD : in std_logic;
      CLK : in std_logic;
      PIX_DATA : out std_logic_vector(37439 downto 0)
   );
@@ -46,7 +50,7 @@ architecture Behavioral of reg_file is
 component reg_column is
   Port ( 
     SHIFT : in std_logic;
-    LD : in std_logic_vector(5 downto 0);
+    LD : in std_logic;
     CLK : in std_logic;
     
     D_IN : in std_logic_vector(7 downto 0);
@@ -60,18 +64,25 @@ component reg_column is
   );
  end component;
  --component signals  
-  signal shift : std_logic := '0';
-  signal ld : std_logic_vector(5 downto 0) := "000001";
+  --signal shift : std_logic := '0';
+  --signal ld : std_logic_vector(5 downto 0) := "000001";
   
   type outw_t is array (0 to 4679) of std_logic_vector(7 downto 0);
+  
   signal outw: outw_t;
   
+  signal cn : unsigned(9 downto 0) := unsigned(COL_NUM);
+  signal ld_w : std_logic_vector(0 to 779);
+
 begin
+
+  ld_w(to_integer(cn)) <= '1';
+  
   GEN_REG: 
   for I in 0 to 779 generate
     REG_COLX : reg_column port map(
-      SHIFT => shift,
-      LD => ld,
+      SHIFT => SHIFT,
+      LD => ld_w(I),
       CLK => CLK,
       D_IN => D_IN,
       D_OUT0 => outw(I),
