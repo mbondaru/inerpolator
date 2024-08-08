@@ -21,6 +21,7 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.numeric_std.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -32,7 +33,10 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity interpolator is
-  Port ( CLK : in std_logic;
+  Port ( 
+    EN : in std_logic;
+    CLK : in std_logic;
+    CLK_DISPLAY : in std_logic;
     D_IN : in std_logic_vector(7 downto 0);
     D_OUT : out std_logic_vector(23 downto 0)
     );
@@ -41,9 +45,20 @@ end interpolator;
 architecture Behavioral of interpolator is
 
 --component declaration
+component counter_10b is
+ port(
+     RESET,CLK,LD,UP : in std_logic;
+     DIN : in std_logic_vector (9 downto 0);
+     COUNT : out std_logic_vector (9 downto 0)
+   );
+end component;
+
 component reg_file is 
   port ( 
    D_IN : in std_logic_vector(7 downto 0);
+   COL_NUM : in std_logic_vector(9 downto 0);
+   SHIFT : in std_logic;
+   LD : in std_logic;
    CLK : in std_logic;
    PIX_DATA : out std_logic_vector(37439 downto 0)
   );
@@ -73,15 +88,118 @@ type interp_w_t is array (0 to 2495) of std_logic_vector(7 downto 0);
 signal interp_w_brbr : interp_w_t;
 signal interp_w_gbrg : interp_w_t;
 
+--pix_counter signals
+signal finished : std_logic := '0';
+signal up : std_logic := '1';
+signal ld : std_logic := '0';
+signal reset_pix_cnt : std_logic := '0';
+signal reset_ln_cnt : std_logic := '0';
+signal din_pix_cnt : std_logic_vector(9 downto 0) := "0000000000";
+signal din_ln_cnt : std_logic_vector(9 downto 0) := "0000000000";
+signal count_pix : std_logic_vector(9 downto 0);
+signal count_ln : std_logic_vector(2 downto 0);
+signal shift : std_logic := '0';
 begin
 
-  --SET_WIRES:  
-  --for I in 0 to 4679 generate
-  --  reg_file_w(I) <= pix_data(I*8 + 7) & pix_data(I*8 + 6) & pix_data(I*8 + 5) & pix_data(I*8 + 4) & pix_data(I*8 + 3) & pix_data(I*8 + 2) & pix_data(I*8 + 1) & pix_data(I*8);
-    
-  --end generate SET_WIRES;
+--  SET_WIRES:  
+--  for I in 0 to 4679 generate
+--    reg_file_w(I) <= pix_data(I*8 + 7) & pix_data(I*8 + 6) & pix_data(I*8 + 5) & pix_data(I*8 + 4) & pix_data(I*8 + 3) & pix_data(I*8 + 2) & pix_data(I*8 + 1) & pix_data(I*8);    
+--  end generate SET_WIRES;
+
+
+--
+--  CCD image sensor sequence
+--
+  process
+  begin
+    if(EN = '1' and ld = '0') then
+      for I in 0 to 17187 loop --vsync 18*984 clocks + 124 hsync
+          wait until rising_edge(CLK);
+      end loop;
+      ld <= '1';
+    end if;
+  end process;
   
-  RFX: reg_file port map(D_IN => D_IN, CLK => CLK, PIX_DATA => pix_data);
+  process
+  begin
+    if (shift = '1') then
+      wait until rising_edge(CLK);
+      shift <= '0';
+      for I in 0 to 167 loop  --hsync: optical black & sync + 2 discarded pixels
+        wait until rising_edge(CLK);
+      end loop;
+      reset_pix_cnt <= '0';
+    elsif (reset_ln_cnt = '1') then -- vsync: 25*948 pixels
+      for I in 0 to 23699 loop
+        wait until rising_edge(CLK);
+      end loop;
+      reset_ln_cnt <= '0'; -- reset pretty much like LD prevents timer from counting
+    end if;
+   end process;
+      
+  process(CLK)
+  begin
+    if(unsigned(count_pix) = 779) then
+      reset_pix_cnt <= '1';
+      shift <= '1';
+    elsif (unsigned(count_ln) = 581) then
+      reset_ln_cnt <= '1';
+    end if;
+  end process;
+      
+      
+  --
+  --  Display sequence
+  --
+  process --(reset_pix_cnt, CLK_DISPLAY)
+  begin
+    if(unsigned(count_ln) > 5) then
+      if (unsigned(count_ln) < 581) then
+        for I in 0 to 121 loop
+          wait until rising_edge(CLK_DISPLAY); --sync
+        end loop;
+        for I in 0 to 623 loop
+          wait until rising_edge(CLK_DISPLAY);
+          if((I rem 2) = 0) then
+            D_OUT <= creg_file_w(1872 + I) & interp_w_gbrg(1872 + I) & interp_w_brbr(1872 + I);
+          else
+            D_OUT <= interp_w_brbr(1872 + I) & creg_file_w(1872 + I) & interp_w_gbrg(1872 + I);
+          end if;
+        end loop;
+        for I in 0 to 101 loop
+          wait until rising_edge(CLK_DISPLAY); --sync
+        end loop;
+        for I in 0 to 121 loop
+          wait until rising_edge(CLK_DISPLAY); --sync
+        end loop;
+        for I in 0 to 623 loop
+          wait until rising_edge(CLK_DISPLAY);
+          if((I rem 2) = 0) then
+            D_OUT <=  interp_w_gbrg(I) & creg_file_w(I) & interp_w_brbr(I);
+          else
+            D_OUT <= interp_w_brbr(I)  & interp_w_gbrg(I) & creg_file_w(I);
+          end if;
+        end loop;
+        for I in 0 to 101 loop
+          wait until rising_edge(CLK_DISPLAY); --sync
+        end loop;
+      else
+        for I in 0 to 623 loop
+          wait until rising_edge(CLK_DISPLAY);
+          if((I rem 2) = 0) then
+            D_OUT <=  interp_w_gbrg(I) & creg_file_w(I) & interp_w_brbr(I);
+          else
+            D_OUT <= interp_w_brbr(I)  & interp_w_gbrg(I) & creg_file_w(I);
+          end if;
+        end loop;
+      end if; 
+    end if;
+  end process;
+  
+  PIX_CNT : counter_10b port map(RESET => reset_pix_cnt, CLK => CLK, LD => ld, UP => '1', DIN => "0000000000", COUNT => count_pix);
+  LN_CNT : counter_10b port map(RESET => reset_ln_cnt, CLK => shift, LD => ld, UP => '1', DIN => "0000000000", COUNT => count_ln);
+
+  RFX: reg_file port map(D_IN => D_IN, COL_NUM => count_pix, SHIFT => shift, LD => '1', CLK => CLK, PIX_DATA => pix_data);
   
   CONVERTERX: converter port map(PIX_DATA_IN => pix_data, PIX_DATA_OUT => cpix_data);
   
@@ -92,7 +210,6 @@ begin
   
   GEN_INTRX:
   for I in 0 to 77 generate
-  
   -- row 1
     BX0: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 1), CLOSER => creg_file_w(I*8 + 1248 + 1), FARTHEST => creg_file_w(I*8 + 3), RES => interp_w_brbr(I*8));
     RX0: interp_1_sqrt5_3 port map(CLOSEST => creg_file_w(I*8 + 624), CLOSER => creg_file_w(I*8 + 624 + 2), FARTHEST => creg_file_w(I*8 + 1872), RES => interp_w_gbrg(I*8));

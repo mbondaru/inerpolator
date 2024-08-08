@@ -44,36 +44,45 @@ end testbench;
 architecture Behavioral of testbench is
   type t_char_file is file of character;
   type t_byte_arr IS ARRAY (natural range <>) of bit_vector(7 downto 0);
-  signal read_arr_byte : t_byte_arr(0 to 453959); --780x582 bayer pattern
-  signal write_arr_byte : t_byte_arr(0 to 1361879);
+  --signal read_arr_byte : t_byte_arr(0 to 453959); --780x582 bayer pattern
+  signal read_arr_byte : t_byte_arr(0 to 592499); --948x625 w/ optical black
+  --signal write_arr_byte : t_byte_arr(0 to 1361879); --wrong
+  signal write_arr_byte : t_byte_arr(0 to 1619999); --864x625 rgb w/ optical black
   
   component interpolator is
     Port ( 
+        EN : in std_logic;
         CLK : in std_logic;
+        CLK_DISPLAY : in std_logic;
         D_IN : in std_logic_vector(7 downto 0);
         D_OUT : out std_logic_vector(23 downto 0)
       );
   end component;
 
+  signal en: std_logic := '0';
+  
   signal start_read : std_logic := '0';
   signal end_read : std_logic := '0';
+  signal start_display : std_logic := '0';
+  signal end_display: std_logic := '0';
   signal end_processing : std_logic := '0';
 
   signal clk : std_logic := '0';
   signal clk_display : std_logic := '0';
   
-  signal gated_clk : std_logic := end_read AND clk;
+  signal gated_clk : std_logic := end_read AND clk AND (NOT end_processing);
+  signal gated_clk_display: std_logic := clk_display AND start_display AND (NOT end_display);
   
   signal data : std_logic_vector(7 downto 0);
   signal rgb : std_logic_vector(23 downto 0);
   
-  signal i : integer range 0 to 453959 := 0;
-  
+  --signal i : integer range 0 to 453959 := 0;
+  signal i : integer range 0 to 590000 := 0; --with optical black & sync
   constant clk_period: time := 34 ns;
   constant clk_display_period : time := 37 ns;
     
 begin
-  UUT: interpolator port map (CLK => gated_clk, D_IN => data, D_OUT => rgb); --unit under test
+  UUT: interpolator port map (EN => en, CLK => gated_clk, CLK_DISPLAY => clk_display, D_IN => data, D_OUT => rgb); --unit under test
 
   read_file: process (start_read) is
     FILE file_in: t_char_file OPEN read_mode is "./wolf.bayer";
@@ -89,6 +98,15 @@ begin
     end if;
   end process read_file;
   
+  reg_file_delay: process
+  begin
+    if end_read'EVENT and end_read = '1' then
+      for I in 0 to 59 loop 
+        wait until rising_edge(gated_clk);
+      end loop;
+      start_display <= '1';
+    end if;
+  end process reg_file_delay;
 --  process_file: process (end_read) is
 --  begin
 --    if end_read'EVENT and end_read = '1' then
@@ -132,14 +150,25 @@ begin
     wait for 100 ns;
   end process;
   
-  data_process: process(gated_clk)
+  data_input_process: process(gated_clk)
   begin
     if (rising_edge(gated_clk)) then
       data <= to_stdlogicvector(read_arr_byte(i));
+      if (i = 589999) then
+        end_processing <= '1';
+      end if;
       i <= i + 1;
     end if;
   end process;
-
+  
+  data_output_process: process(gated_clk_display)
+  begin
+    if(rising_edge(gated_clk_display)) then
+      write_arr_byte(i*3) <= to_bitvector(rgb(23 downto 16));
+      write_arr_byte(i*3 + 1) <= to_bitvector(rgb(15 downto 8));
+      write_arr_byte(i*3 + 2) <= to_bitvector(rgb(7 downto 0));
+    end if;
+  end process;
 end Behavioral;
 
 
