@@ -45,7 +45,7 @@ architecture Behavioral of testbench is
   type t_char_file is file of character;
   type t_byte_arr IS ARRAY (natural range <>) of bit_vector(7 downto 0);
   --signal read_arr_byte : t_byte_arr(0 to 453959); --780x582 bayer pattern
-  signal read_arr_byte : t_byte_arr(0 to 592499); --948x625 w/ optical black
+  signal read_arr_byte : t_byte_arr(0 to 589999); --944x625 w/ optical black
   --signal write_arr_byte : t_byte_arr(0 to 1361879); --wrong
   signal write_arr_byte : t_byte_arr(0 to 1619999); --864x625 rgb w/ optical black
   
@@ -77,12 +77,12 @@ architecture Behavioral of testbench is
   signal rgb : std_logic_vector(23 downto 0);
   
   --signal i : integer range 0 to 453959 := 0;
-  signal i : integer range 0 to 590000 := 0; --with optical black & sync
+  signal i : integer range 0 to 589999 := 0; --with optical black & sync
   constant clk_period: time := 34 ns;
   constant clk_display_period : time := 37 ns;
     
 begin
-  UUT: interpolator port map (EN => en, CLK => gated_clk, CLK_DISPLAY => clk_display, D_IN => data, D_OUT => rgb); --unit under test
+  UUT: interpolator port map (EN => end_read, CLK => gated_clk, CLK_DISPLAY => clk_display, D_IN => data, D_OUT => rgb); --unit under test
 
   read_file: process (start_read) is
     FILE file_in: t_char_file OPEN read_mode is "./wolf.bayer";
@@ -152,7 +152,7 @@ begin
   
   data_input_process: process(gated_clk)
   begin
-    if (rising_edge(gated_clk)) then
+    if (falling_edge(gated_clk)) then
       data <= to_stdlogicvector(read_arr_byte(i));
       if (i = 589999) then
         end_processing <= '1';

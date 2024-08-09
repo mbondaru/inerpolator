@@ -89,9 +89,10 @@ signal interp_w_brbr : interp_w_t;
 signal interp_w_gbrg : interp_w_t;
 
 --pix_counter signals
-signal finished : std_logic := '0';
+signal start : std_logic := '0';
 signal up : std_logic := '1';
 signal ld : std_logic := '0';
+signal wr_en : std_logic := '0';
 signal reset_pix_cnt : std_logic := '0';
 signal reset_ln_cnt : std_logic := '0';
 signal din_pix_cnt : std_logic_vector(9 downto 0) := "0000000000";
@@ -113,7 +114,7 @@ begin
   process
   begin
     if(EN = '1' and ld = '0') then
-      for I in 0 to 17187 loop --vsync 18*984 clocks + 124 hsync
+      for I in 0 to 17117 loop --vsync 18*944 clocks + 124 hsync + 2 discarded pixels
           wait until rising_edge(CLK);
       end loop;
       ld <= '1';
@@ -122,17 +123,26 @@ begin
   
   process
   begin
-    if (shift = '1') then
-      wait until rising_edge(CLK);
-      shift <= '0';
-      for I in 0 to 167 loop  --hsync: optical black & sync + 2 discarded pixels
+    if (reset_pix_cnt = '1') then
+      if(unsigned(count_ln) < 581) then
+        shift <= '1';
+        wait until rising_edge(CLK);
+        shift <= '0';
+        for I in 0 to 161 loop  --hsync: optical black & sync + 2 discarded pixels = 102+19=121 is sync, + 3 o.b. =124 + 38 o.b. = 
+          wait until rising_edge(CLK);
+        end loop;
+        reset_pix_cnt <= '0';
+      else
+        for I in 0 to 37 loop
+          wait until rising_edge(CLK); --optical black
+         end loop;
+      end if;
+    elsif (reset_ln_cnt = '1') then -- vsync: 25*944 pixels
+      for I in 0 to 23599 loop
         wait until rising_edge(CLK);
       end loop;
+      ld <= '0';
       reset_pix_cnt <= '0';
-    elsif (reset_ln_cnt = '1') then -- vsync: 25*948 pixels
-      for I in 0 to 23699 loop
-        wait until rising_edge(CLK);
-      end loop;
       reset_ln_cnt <= '0'; -- reset pretty much like LD prevents timer from counting
     end if;
    end process;
@@ -141,7 +151,6 @@ begin
   begin
     if(unsigned(count_pix) = 779) then
       reset_pix_cnt <= '1';
-      shift <= '1';
     elsif (unsigned(count_ln) = 581) then
       reset_ln_cnt <= '1';
     end if;
@@ -151,15 +160,25 @@ begin
   --
   --  Display sequence
   --
+  process
+  begin
+    if(EN = '1' and wr_en = '0') then  --vsync: 38x864 display clocks
+      for I in 0 to 32831 loop
+        wait until rising_edge(CLK_DISPLAY);
+      end loop;
+      wr_en <= '1';
+    end if;
+  end process;
+  
   process --(reset_pix_cnt, CLK_DISPLAY)
   begin
-    if(unsigned(count_ln) > 5) then
+    if(unsigned(count_ln) > 4) then
       if (unsigned(count_ln) < 581) then
         for I in 0 to 121 loop
           wait until rising_edge(CLK_DISPLAY); --sync
         end loop;
         for I in 0 to 623 loop
-          wait until rising_edge(CLK_DISPLAY);
+          wait until falling_edge(CLK_DISPLAY);
           if((I rem 2) = 0) then
             D_OUT <= creg_file_w(1872 + I) & interp_w_gbrg(1872 + I) & interp_w_brbr(1872 + I);
           else
@@ -173,25 +192,82 @@ begin
           wait until rising_edge(CLK_DISPLAY); --sync
         end loop;
         for I in 0 to 623 loop
-          wait until rising_edge(CLK_DISPLAY);
+          wait until falling_edge(CLK_DISPLAY);
           if((I rem 2) = 0) then
-            D_OUT <=  interp_w_gbrg(I) & creg_file_w(I) & interp_w_brbr(I);
+            D_OUT <=  interp_w_gbrg(I + 1872) & creg_file_w(I + 1872) & interp_w_brbr(I + 1872);
           else
-            D_OUT <= interp_w_brbr(I)  & interp_w_gbrg(I) & creg_file_w(I);
+            D_OUT <= interp_w_brbr(I + 1872)  & interp_w_gbrg(I + 1872) & creg_file_w(I + 1872);
           end if;
         end loop;
         for I in 0 to 101 loop
           wait until rising_edge(CLK_DISPLAY); --sync
         end loop;
       else
-        for I in 0 to 623 loop
-          wait until rising_edge(CLK_DISPLAY);
-          if((I rem 2) = 0) then
-            D_OUT <=  interp_w_gbrg(I) & creg_file_w(I) & interp_w_brbr(I);
-          else
-            D_OUT <= interp_w_brbr(I)  & interp_w_gbrg(I) & creg_file_w(I);
-          end if;
-        end loop;
+      
+       for I in 0 to 121 loop
+         wait until rising_edge(CLK_DISPLAY); --sync
+       end loop;
+       for I in 0 to 623 loop
+         wait until falling_edge(CLK_DISPLAY);
+         if((I rem 2) = 0) then
+           D_OUT <= creg_file_w(1872 + I) & interp_w_gbrg(1872 + I) & interp_w_brbr(1872 + I);
+         else
+           D_OUT <= interp_w_brbr(1872 + I) & creg_file_w(1872 + I) & interp_w_gbrg(1872 + I);
+         end if;
+       end loop;
+       for I in 0 to 101 loop
+         wait until rising_edge(CLK_DISPLAY); --sync
+       end loop;
+       
+       for I in 0 to 121 loop
+         wait until rising_edge(CLK_DISPLAY); --sync
+       end loop;
+       for I in 0 to 623 loop
+         wait until falling_edge(CLK_DISPLAY);
+         if((I rem 2) = 0) then
+           D_OUT <= interp_w_gbrg(I + 1248) & creg_file_w(I + 1248) & interp_w_brbr(I + 1248);
+         else
+           D_OUT <= interp_w_brbr(I + 1248)  & interp_w_gbrg(I + 1248) & creg_file_w(I + 1248);
+         end if;
+       end loop;
+       for I in 0 to 101 loop
+         wait until rising_edge(CLK_DISPLAY); --sync
+       end loop;
+          
+       for I in 0 to 121 loop
+         wait until rising_edge(CLK_DISPLAY); --sync
+       end loop;
+       for I in 0 to 623 loop
+         wait until falling_edge(CLK_DISPLAY);
+         if((I rem 2) = 0) then
+           D_OUT <= creg_file_w(624 + I) & interp_w_gbrg(624 + I) & interp_w_brbr(624 + I);
+         else
+           D_OUT <= interp_w_brbr(624 + I) & creg_file_w(624 + I) & interp_w_gbrg(624 + I);
+         end if;
+       end loop;
+       for I in 0 to 101 loop
+         wait until rising_edge(CLK_DISPLAY); --sync
+       end loop;
+       
+       for I in 0 to 121 loop
+         wait until rising_edge(CLK_DISPLAY); --sync
+       end loop;
+       for I in 0 to 623 loop
+         wait until falling_edge(CLK_DISPLAY);
+         if((I rem 2) = 0) then
+           D_OUT <= interp_w_gbrg(I) & creg_file_w(I) & interp_w_brbr(I);
+         else
+           D_OUT <= interp_w_brbr(I)  & interp_w_gbrg(I) & creg_file_w(I);
+         end if;
+       end loop;
+       for I in 0 to 101 loop
+         wait until rising_edge(CLK_DISPLAY); --sync
+       end loop;
+       
+       for I in 0 to 161567 loop
+         wait until rising_edge(CLK_DISPLAY); --vsync
+       end loop;
+       wr_en <= '0';
       end if; 
     end if;
   end process;
