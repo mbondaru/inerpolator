@@ -48,17 +48,24 @@ architecture Behavioral of interpolator is
 component counter_10b is
  port(
      RESET,CLK,LD,UP : in std_logic;
-     DIN : in std_logic_vector (9 downto 0);
+     --DIN : in std_logic_vector (9 downto 0);
      COUNT : out std_logic_vector (9 downto 0)
    );
 end component;
-
+component counter_3b is
+port (
+     RESET,CLK,LD,UP : in std_logic;
+     DIN : in std_logic_vector (2 downto 0);
+     COUNT : out std_logic_vector (2 downto 0)
+);
+end component;
 component reg_file is 
   port ( 
    D_IN : in std_logic_vector(7 downto 0);
    COL_NUM : in std_logic_vector(9 downto 0);
+   ROW_NUM : in std_logic_vector(9 downto 0);
    SHIFT : in std_logic;
-   LD : in std_logic;
+   --LD : in std_logic;
    CLK : in std_logic;
    PIX_DATA : out std_logic_vector(37439 downto 0)
   );
@@ -95,11 +102,15 @@ signal ld : std_logic := '0';
 signal wr_en : std_logic := '0';
 signal reset_pix_cnt : std_logic := '0';
 signal reset_ln_cnt : std_logic := '0';
-signal din_pix_cnt : std_logic_vector(9 downto 0) := "0000000000";
-signal din_ln_cnt : std_logic_vector(9 downto 0) := "0000000000";
+signal reset_reg_file_idx : std_logic := '0';
+--signal din_pix_cnt : std_logic_vector(9 downto 0) := "0000000000";
+--signal din_ln_cnt : std_logic_vector(9 downto 0) := "0000000000";
 signal count_pix : std_logic_vector(9 downto 0);
-signal count_ln : std_logic_vector(2 downto 0);
+signal count_ln : std_logic_vector(9 downto 0);
+signal count_reg_file : std_logic_vector(2 downto 0);
+signal reg_file_idx : std_logic_vector(2 downto 0);
 signal shift : std_logic := '0';
+
 begin
 
 --  SET_WIRES:  
@@ -151,6 +162,8 @@ begin
   begin
     if(unsigned(count_pix) = 779) then
       reset_pix_cnt <= '1';
+    elsif(unsigned(count_reg_file) = 5) then
+      shift <= '1';
     elsif (unsigned(count_ln) = 581) then
       reset_ln_cnt <= '1';
     end if;
@@ -272,10 +285,17 @@ begin
     end if;
   end process;
   
-  PIX_CNT : counter_10b port map(RESET => reset_pix_cnt, CLK => CLK, LD => ld, UP => '1', DIN => "0000000000", COUNT => count_pix);
-  LN_CNT : counter_10b port map(RESET => reset_ln_cnt, CLK => shift, LD => ld, UP => '1', DIN => "0000000000", COUNT => count_ln);
-
-  RFX: reg_file port map(D_IN => D_IN, COL_NUM => count_pix, SHIFT => shift, LD => '1', CLK => CLK, PIX_DATA => pix_data);
+  PIX_CNT : counter_10b port map(RESET => reset_pix_cnt, CLK => CLK, LD => ld, UP => '1', 
+  --DIN => "0000000000", 
+  COUNT => count_pix);
+  LN_CNT : counter_10b port map(RESET => reset_ln_cnt, CLK => reset_pix_cnt, LD => ld, UP => '1', 
+  --DIN => "0000000000", 
+  COUNT => count_ln);
+  REG_FILE_CNT : counter_3b port map(RESET => reset_reg_file_idx, CLK => reset_pix_cnt, LD => ld, UP => '1',
+    DIN => "101",
+    COUNT => count_reg_file);
+    
+  RFX: reg_file port map(D_IN => D_IN, COL_NUM => count_pix, ROW_NUM => count_reg_file, SHIFT => shift, CLK => CLK, PIX_DATA => pix_data);
   
   CONVERTERX: converter port map(PIX_DATA_IN => pix_data, PIX_DATA_OUT => cpix_data);
   

@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GenRun Id="synth_1" LaunchPart="xc7a50tcsg325-2L" LaunchTime="1723034843">
-  <File Type="VDS-TIMING-PB" Name="interpolator_timing_summary_synth.pb"/>
-  <File Type="VDS-TIMINGSUMMARY" Name="interpolator_timing_summary_synth.rpt"/>
-  <File Type="RDS-DCP" Name="interpolator.dcp"/>
-  <File Type="RDS-UTIL-PB" Name="interpolator_utilization_synth.pb"/>
-  <File Type="RDS-UTIL" Name="interpolator_utilization_synth.rpt"/>
-  <File Type="RDS-PROPCONSTRS" Name="interpolator_drc_synth.rpt"/>
-  <File Type="RDS-RDS" Name="interpolator.vds"/>
   <File Type="REPORTS-TCL" Name="interpolator_reports.tcl"/>
   <File Type="PA-TCL" Name="interpolator.tcl"/>
+  <File Type="RDS-DCP" Name="interpolator.dcp"/>
+  <File Type="RDS-RDS" Name="interpolator.vds"/>
+  <File Type="RDS-UTIL-PB" Name="interpolator_utilization_synth.pb"/>
+  <File Type="RDS-UTIL" Name="interpolator_utilization_synth.rpt"/>
   <FileSet Name="sources" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1">
     <Filter Type="Srcs"/>
     <File Path="$PSRCDIR/sources_1/new/RS_2.vhd">
@@ -114,9 +111,7 @@
     </Config>
   </FileSet>
   <Strategy Version="1" Minor="2">
-    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2018">
-      <Desc>Vivado Synthesis Defaults</Desc>
-    </StratHandle>
+    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2018"/>
     <Step Id="synth_design">
       <Option Id="MoreOptsStr"><![CDATA[-verbose]]></Option>
     </Step>

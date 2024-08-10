@@ -71,7 +71,7 @@ architecture Behavioral of testbench is
   signal clk_display : std_logic := '0';
   
   signal gated_clk : std_logic := end_read AND clk AND (NOT end_processing);
-  signal gated_clk_display: std_logic := clk_display AND start_display AND (NOT end_display);
+  signal gated_clk_display: std_logic := clk_display AND end_read AND (NOT end_processing);
   
   signal data : std_logic_vector(7 downto 0);
   signal rgb : std_logic_vector(23 downto 0);
@@ -85,7 +85,7 @@ begin
   UUT: interpolator port map (EN => end_read, CLK => gated_clk, CLK_DISPLAY => clk_display, D_IN => data, D_OUT => rgb); --unit under test
 
   read_file: process (start_read) is
-    FILE file_in: t_char_file OPEN read_mode is "./wolf.bayer";
+    FILE file_in: t_char_file OPEN read_mode is "./wolf780x582wob.bayer";
     variable char_buffer : character;
   begin
     if start_read'EVENT and start_read = '1' then
@@ -98,34 +98,46 @@ begin
     end if;
   end process read_file;
   
-  reg_file_delay: process
-  begin
-    if end_read'EVENT and end_read = '1' then
-      for I in 0 to 59 loop 
-        wait until rising_edge(gated_clk);
-      end loop;
-      start_display <= '1';
-    end if;
-  end process reg_file_delay;
+--  reg_file_delay: process
+--  begin
+--    if end_read'EVENT and end_read = '1' then
+--      for I in 0 to 59 loop 
+--        wait until rising_edge(gated_clk);
+--      end loop;
+--      start_display <= '1';
+--    end if;
+--  end process reg_file_delay;
 --  process_file: process (end_read) is
 --  begin
 --    if end_read'EVENT and end_read = '1' then
 --      start_processing
 --    end if;
 --  end process process_file;
-  
-  write_file: process (end_processing) is
-    FILE file_out: t_char_file OPEN write_mode is "./wolf.rgb";
-    variable char_buffer : character;
-  begin
-    if end_processing'EVENT and end_processing = '1' then
-      for i in write_arr_byte'RANGE loop
-        char_buffer := character'val(bit_vector'pos(write_arr_byte(i)));
-        write(file_out, char_buffer);
-      end loop;
-      file_close(file_out);
-    end if;
-  end process write_file;
+ write_file: process (end_processing) is
+  FILE file_out: t_char_file OPEN write_mode is "./wolf.rgb";
+  variable char_buffer : character;
+begin
+  if end_processing'EVENT and end_processing = '1' then
+    for i in write_arr_byte'RANGE loop
+      char_buffer := character'val(bit_vector'pos(write_arr_byte(i)));
+      write(file_out, char_buffer);
+    end loop;
+    file_close(file_out);
+  end if;
+end process write_file;
+
+--  write_file: process (end_read) is
+--    FILE file_out: t_char_file OPEN write_mode is "./wolf.rgb";
+--    variable char_buffer : character;
+--  begin
+--    if end_read'EVENT and end_read = '1' then
+--      for i in write_arr_byte'RANGE loop
+--        char_buffer := character'val(bit_vector'pos(write_arr_byte(i)));
+--        write(file_out, char_buffer);
+--      end loop;
+--      file_close(file_out);
+--    end if;
+--  end process write_file;
   
   
   clk_process: process

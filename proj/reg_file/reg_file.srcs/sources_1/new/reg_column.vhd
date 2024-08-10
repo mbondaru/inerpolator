@@ -34,7 +34,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity reg_column is
   Port ( 
     SHIFT : in std_logic;
-    LD : in std_logic;
+    LD : in std_logic_vector(0 to 5);
     CLK : in std_logic;
     
     D_IN : in std_logic_vector(7 downto 0);
@@ -50,6 +50,10 @@ entity reg_column is
     D_OUT3 : out std_logic_vector(7 downto 0);
     D_OUT4 : out std_logic_vector(7 downto 0);
     D_OUT5 : out std_logic_vector(7 downto 0)
+    --D_OUT6 : out std_logic_vector(7 downto 0);
+    --D_OUT7 : out std_logic_vector(7 downto 0);
+    --D_OUT8 : out std_logic_vector(7 downto 0);
+    --D_OUT9 : out std_logic_vector(7 downto 0)
   );
 end reg_column;
 
@@ -64,40 +68,63 @@ architecture Behavioral of reg_column is
   end component;
   
   
---  signal reg_in0 : std_logic_vector(7 downto 0);
---  signal reg_in1 : std_logic_vector(7 downto 0);
---  signal reg_in2 : std_logic_vector(7 downto 0);
---  signal reg_in3 : std_logic_vector(7 downto 0);
---  signal reg_in4 : std_logic_vector(7 downto 0);
---  signal reg_in5 : std_logic_vector(7 downto 0);
-   
-  signal reg_out0 : std_logic_vector(7 downto 0);
-  signal reg_out1 : std_logic_vector(7 downto 0);
-  signal reg_out2 : std_logic_vector(7 downto 0);
-  signal reg_out3 : std_logic_vector(7 downto 0);
+  signal reg_in0 : std_logic_vector(7 downto 0);
+  signal reg_in1 : std_logic_vector(7 downto 0);
+  signal reg_in2 : std_logic_vector(7 downto 0);
+  signal reg_in3 : std_logic_vector(7 downto 0);
+  signal reg_in4 : std_logic_vector(7 downto 0);
+  signal reg_in5 : std_logic_vector(7 downto 0);
+
   signal reg_out4 : std_logic_vector(7 downto 0);
   signal reg_out5 : std_logic_vector(7 downto 0);
-  
-  signal ld_w : std_logic_vector(4 downto 0) := "00000";
+  signal reg_out6 : std_logic_vector(7 downto 0);
+  signal reg_out7 : std_logic_vector(7 downto 0);
+  signal reg_out8 : std_logic_vector(7 downto 0);
+  signal reg_out9 : std_logic_vector(7 downto 0);
+  signal reg_out10 : std_logic_vector(7 downto 0);
+  signal reg_out11 : std_logic_vector(7 downto 0);
+
+  --signal ld_w : std_logic_vector(4 downto 0) := "00000";
   
 begin
 
     with SHIFT select
-        ld_w <= "11111" when '1',
-        "00000" when others;
+        reg_in0 <= D_IN when '0',
+        reg_out6 when others;
+    with SHIFT select
+        reg_in1 <= D_IN when '0',
+        reg_out7 when others;
+    with SHIFT select
+        reg_in2 <= D_IN when '0',
+        reg_out8 when others;
+    with SHIFT select
+        reg_in3 <= D_IN when '0',
+        reg_out9 when others;
+    with SHIFT select
+        reg_in4 <= D_IN when '0',
+        reg_out10 when others;
+    with SHIFT select
+        reg_in5 <= D_IN when '0',
+        reg_out11 when others;
         
-REG0: register_8b port map (REG_IN => D_IN, LD => LD, CLK => CLK, REG_OUT => reg_out0);
-REG1: register_8b port map (REG_IN => reg_out0, LD => ld_w(0), CLK => CLK, REG_OUT => reg_out1);
-REG2: register_8b port map (REG_IN => reg_out1, LD => ld_w(1), CLK => CLK, REG_OUT => reg_out2);
-REG3: register_8b port map (REG_IN => reg_out2, LD => ld_w(2), CLK => CLK, REG_OUT => reg_out3);
-REG4: register_8b port map (REG_IN => reg_out3, LD => ld_w(3), CLK => CLK, REG_OUT => reg_out4);
-REG5: register_8b port map (REG_IN => reg_out4, LD => ld_w(4), CLK => CLK, REG_OUT => reg_out5);
-   D_OUT0 <= reg_out0;
-   D_OUT1 <= reg_out1;
-   D_OUT2 <= reg_out2;
-   D_OUT3 <= reg_out3;
-   D_OUT4 <= reg_out4;
-   D_OUT5 <= reg_out5;
+REG0: register_8b port map (REG_IN => reg_out6, LD => SHIFT, CLK => CLK, REG_OUT => D_OUT0);
+REG1: register_8b port map (REG_IN => reg_out7, LD => SHIFT, CLK => CLK, REG_OUT => D_OUT1);
+REG2: register_8b port map (REG_IN => reg_out8, LD => SHIFT, CLK => CLK, REG_OUT => D_OUT2);
+REG3: register_8b port map (REG_IN => reg_out9, LD => SHIFT, CLK => CLK, REG_OUT => D_OUT3);
+REG4: register_8b port map (REG_IN => reg_out10, LD => SHIFT, CLK => CLK, REG_OUT => D_OUT4);
+REG5: register_8b port map (REG_IN => reg_out11, LD => SHIFT, CLK => CLK, REG_OUT => D_OUT5);
+REG6: register_8b port map (REG_IN => D_IN, LD => LD(0), CLK => CLK, REG_OUT => reg_out6);
+REG7: register_8b port map (REG_IN => D_IN, LD => LD(1), CLK => CLK, REG_OUT => reg_out7);
+REG8: register_8b port map (REG_IN => D_IN, LD => LD(2), CLK => CLK, REG_OUT => reg_out8);
+REG9: register_8b port map (REG_IN => D_IN, LD => LD(3), CLK => CLK, REG_OUT => reg_out9);
+REG10: register_8b port map (REG_IN => D_IN, LD => LD(4), CLK => CLK, REG_OUT => reg_out10);
+REG11: register_8b port map (REG_IN => D_IN, LD => LD(5), CLK => CLK, REG_OUT => reg_out11);
+
+
+   --D_OUT6 <= reg_out5;
+   --D_OUT7 <= reg_out5;
+   --D_OUT8 <= reg_out5;
+   --D_OUT9 <= reg_out5;
 
   
 

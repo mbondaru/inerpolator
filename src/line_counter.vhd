@@ -36,13 +36,13 @@ entity counter_10b is
   port(
     RESET,CLK,LD,UP : in std_logic;
     --DIN : in std_logic_vector (2 downto 0);
-    COUNT : out std_logic_vector (2 downto 0)
+    COUNT : out std_logic_vector (9 downto 0)
   );
 end counter_10b;
 
 architecture Behavioral of counter_10b is
 
-  signal t_cnt : unsigned(2 downto 0);
+  signal t_cnt : unsigned(9 downto 0);
   
 begin
 process (CLK, RESET)
