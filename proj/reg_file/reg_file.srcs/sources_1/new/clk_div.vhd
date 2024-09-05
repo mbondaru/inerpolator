@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company: IP Bondaruk
+-- Engineer: Maksim Bondaruk
 -- 
 -- Create Date: 08/10/2024 05:17:18 AM
 -- Design Name: 
@@ -57,10 +57,14 @@ begin
 --divide input clock by 4.5 => double count to 9
   rst <= not EN;
   CLK_OUT <= clk;
+  with EN select
+    CLK_OUT <= CLK_IN when '0',
+    clk when '1';
+    
 DBL_CNT: double_counter_4b port map(RESET => rst, CLK => CLK_IN, LD => ld, UP => '1', DIN => "1000", COUNT => cnt);
 
 
-CLK_DIVIDE: process(CLK_IN)
+CLK_DIVIDE: process(CLK_IN, EN)
 begin
   if(EN = '1') then
     if(rising_edge(CLK_IN)) then

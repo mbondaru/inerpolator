@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company: IP Bondaruk
+-- Engineer: Maksim Bondaruk
 -- 
 -- Create Date: 07/14/2024 05:06:37 AM
 -- Design Name: 

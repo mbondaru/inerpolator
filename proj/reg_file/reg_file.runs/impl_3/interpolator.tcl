@@ -68,12 +68,12 @@ set rc [catch {
   create_project -in_memory -part xc7a50tcsg325-2L
   set_property design_mode GateLvl [current_fileset]
   set_param project.singleFileAddWarning.threshold 0
-  set_property webtalk.parent_dir /home/bimbom/Desktop/reg_file/reg_file.cache/wt [current_project]
-  set_property parent.project_path /home/bimbom/Desktop/reg_file/reg_file.xpr [current_project]
-  set_property ip_output_repo /home/bimbom/Desktop/reg_file/reg_file.cache/ip [current_project]
+  set_property webtalk.parent_dir /home/bimbom/Desktop/VivadoWorkspace/reg_file/reg_file.cache/wt [current_project]
+  set_property parent.project_path /home/bimbom/Desktop/VivadoWorkspace/reg_file/reg_file.xpr [current_project]
+  set_property ip_output_repo /home/bimbom/Desktop/VivadoWorkspace/reg_file/reg_file.cache/ip [current_project]
   set_property ip_cache_permissions {read write} [current_project]
-  add_files -quiet /home/bimbom/Desktop/reg_file/reg_file.runs/synth_1/interpolator.dcp
-  read_xdc /home/bimbom/Desktop/reg_file/reg_file.srcs/constrs_1/imports/new/interpolator_8b_constraints.xdc
+  add_files -quiet /home/bimbom/Desktop/VivadoWorkspace/reg_file/reg_file.runs/synth_1/interpolator.dcp
+  read_xdc /home/bimbom/Desktop/VivadoWorkspace/reg_file/reg_file.srcs/constrs_1/imports/new/interpolator_8b_constraints.xdc
   link_design -top interpolator -part xc7a50tcsg325-2L
   close_msg_db -file init_design.pb
 } RESULT]

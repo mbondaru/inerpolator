@@ -1,0 +1,20 @@
+# compile vhdl design source files
+vhdl xil_defaultlib  \
+"../../../../reg_file.srcs/sources_1/new/RS_2.vhd" \
+"../../../../reg_file.srcs/sources_1/new/add_1b.vhd" \
+"../../../../reg_file.srcs/sources_1/new/add_8b.vhd" \
+"../../../../reg_file.srcs/sources_1/new/add_9b.vhd" \
+"../../../../reg_file.srcs/sources_1/new/avger.vhd" \
+"../../../../reg_file.srcs/sources_1/new/avger_g.vhd" \
+"../../../../reg_file.srcs/sources_1/new/converter.vhd" \
+"../../../../reg_file.srcs/sources_1/new/counter_3b.vhd" \
+"../../../../reg_file.srcs/sources_1/new/interp_1_sqrt5_3.vhd" \
+"../../../../reg_file.srcs/sources_1/new/interpolator.vhd" \
+"../../../../reg_file.srcs/sources_1/new/line_counter.vhd" \
+"../../../../reg_file.srcs/sources_1/new/reg_column.vhd" \
+"../../../../reg_file.srcs/sources_1/new/reg_file.vhd" \
+"../../../../reg_file.srcs/sources_1/imports/new/register_8b.vhd" \
+"../../../../reg_file.srcs/sim_1/new/simple_testbench.vhd" \
+
+# Do not sort compile order
+nosort

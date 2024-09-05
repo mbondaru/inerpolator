@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company: IP Bondaruk
+-- Engineer: Maksim Bondaruk
 -- 
 -- Create Date: 08/01/2024 01:30:13 AM
 -- Design Name: 
@@ -36,7 +36,7 @@ entity reg_file is
   Port ( 
      D_IN : in std_logic_vector(7 downto 0);
      COL_NUM : in std_logic_vector(9 downto 0);
-     ROW_NUM : in std_logic_vector(9 downto 0);
+     ROW_NUM : in std_logic_vector(2 downto 0);
      SHIFT : in std_logic;
      CLK : in std_logic;
      PIX_DATA : out std_logic_vector(37439 downto 0)
@@ -71,20 +71,36 @@ component reg_column is
   --signal shift : std_logic := '0';
   --signal ld : std_logic_vector(5 downto 0) := "000001";
   
-  type outw_t is array (0 to 9359) of std_logic_vector(7 downto 0); --12x780 8-bit registers
+  type outw_t is array (0 to 4679) of std_logic_vector(7 downto 0); --12x780 8-bit registers
   --type inw_t is array(0 to 7799) of std_logic_vector(7 downto 0);
   signal outw: outw_t;
   --signal inw : inw_t;
   
-  signal cn : integer range 0 to 779 := to_integer(unsigned(COL_NUM));
-  signal rn : integer range 0 to 5 := to_integer(unsigned(ROW_NUM));
-
+  --signal col_ld : std_logic_vector(0 to 779);
+  signal row_ld : std_logic_vector(0 to 5);
+  signal cn : integer range 0 to 779;
+  
   
   type ld_w_t is array (0 to 779) of std_logic_vector(0 to 5);
   signal ld_w : ld_w_t;
   --signal sel : std_logic := '0';
 begin
-   ld_w(cn)(rn) <= '1';
+   cn <= to_integer(unsigned(COL_NUM));
+   
+   with ROW_NUM select
+     row_ld <= "000001" when "000",
+     "000010" when "001",
+     "000100" when "010",
+     "001000" when "011",
+     "010000" when "100",
+     "100000" when others;
+     
+   GEN_MUX:
+    for I in 0 to 779 generate
+       with cn select
+         ld_w(I) <= row_ld when I,
+         "000000" when others;
+    end generate GEN_MUX;
   
   GEN_REG: 
   for I in 0 to 779 generate

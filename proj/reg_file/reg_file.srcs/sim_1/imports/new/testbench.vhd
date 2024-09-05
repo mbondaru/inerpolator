@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company: IP Bondaruk
+-- Engineer: Maksim Bondaruk
 -- 
 -- Create Date: 07/14/2024 03:50:26 PM
 -- Design Name: 
@@ -45,9 +45,9 @@ architecture Behavioral of testbench is
   type t_char_file is file of character;
   type t_byte_arr IS ARRAY (natural range <>) of bit_vector(7 downto 0);
   --signal read_arr_byte : t_byte_arr(0 to 453959); --780x582 bayer pattern
-  signal read_arr_byte : t_byte_arr(0 to 589999); --944x625 w/ optical black
+  signal read_arr_byte : t_byte_arr(0 to 589999); --944x625 w/ optical black (Progressive scan 1/50s)
   --signal write_arr_byte : t_byte_arr(0 to 1361879); --wrong
-  signal write_arr_byte : t_byte_arr(0 to 1619999); --864x625 rgb w/ optical black
+  signal write_arr_byte : t_byte_arr(0 to 1351349); --858x525 rgb w/ optical black (60Hz mode) => 450450 pixels * 24 bit
   
   component interpolator is
     Port ( 

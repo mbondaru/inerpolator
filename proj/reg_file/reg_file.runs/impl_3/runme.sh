@@ -20,7 +20,7 @@ else
 fi
 export LD_LIBRARY_PATH
 
-HD_PWD='/home/bimbom/Desktop/reg_file/reg_file.runs/impl_3'
+HD_PWD='/home/bimbom/Desktop/VivadoWorkspace/reg_file/reg_file.runs/impl_3'
 cd "$HD_PWD"
 
 HD_LOG=runme.log

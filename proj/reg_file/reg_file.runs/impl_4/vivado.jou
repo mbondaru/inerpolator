@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Vivado v2018.2 (64-bit)
+# SW Build 2258646 on Thu Jun 14 20:02:38 MDT 2018
+# IP Build 2256618 on Thu Jun 14 22:10:49 MDT 2018
+# Start of session at: Sat Aug 17 02:09:02 2024
+# Process ID: 57362
+# Current directory: /home/bimbom/Desktop/VivadoWorkspace/reg_file/reg_file.runs/impl_4
+# Command line: vivado -log interpolator.vdi -applog -product Vivado -messageDb vivado.pb -mode batch -source interpolator.tcl -notrace
+# Log file: /home/bimbom/Desktop/VivadoWorkspace/reg_file/reg_file.runs/impl_4/interpolator.vdi
+# Journal file: /home/bimbom/Desktop/VivadoWorkspace/reg_file/reg_file.runs/impl_4/vivado.jou
+#-----------------------------------------------------------
+source interpolator.tcl -notrace

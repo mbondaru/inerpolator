@@ -1,13 +1,13 @@
 Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2018.2 (lin64) Build 2258646 Thu Jun 14 20:02:38 MDT 2018
-| Date         : Wed Aug  7 16:51:03 2024
+| Date         : Fri Aug 16 12:00:48 2024
 | Host         : max running 64-bit Debian GNU/Linux 12 (bookworm)
 | Command      : report_drc -file interpolator_drc_opted.rpt -pb interpolator_drc_opted.pb -rpx interpolator_drc_opted.rpx
 | Design       : interpolator
 | Device       : xc7a50tcsg325-2L
 | Speed File   : -2L
-| Design State : Routed
+| Design State : Synthesized
 ---------------------------------------------------------------------------------------------------------------------------
 
 Report DRC
@@ -24,12 +24,78 @@ Table of Contents
       Design limits: <entire design considered>
            Ruledeck: default
              Max violations: <unlimited>
-             Violations found: 0
-+------+----------+-------------+------------+
-| Rule | Severity | Description | Violations |
-+------+----------+-------------+------------+
-+------+----------+-------------+------------+
+             Violations found: 9
++-------------+----------+-------------------------------------------------------------+------------+
+| Rule        | Severity | Description                                                 | Violations |
++-------------+----------+-------------------------------------------------------------+------------+
+| PLCK-12     | Error    | Clock Placer Checks                                         | 2          |
+| UTLZ-1      | Error    | Resource utilization                                        | 6          |
+| PLHOLDVIO-2 | Warning  | Non-Optimal connections which could lead to hold violations | 1          |
++-------------+----------+-------------------------------------------------------------+------------+
 
 2. REPORT DETAILS
 -----------------
+PLCK-12#1 Error
+Clock Placer Checks  
+Poor placement for routing between an IO pin and BUFG. 
+Resolution: Poor placement of an IO pin and a BUFG has resulted in the router using a non-dedicated path between the two.  There are several things that could trigger this DRC, each of which can cause unpredictable clock insertion delays that result in poor timing.  This DRC could be caused by any of the following: (a) a clock port was placed on a pin that is not a CCIO-pin (b)the BUFG has not been placed in the same half of the device or SLR as the CCIO-pin (c) a single ended clock has been placed on the N-Side of a differential pair CCIO-pin.
+ If this sub optimal condition is acceptable for this design, you may use the CLOCK_DEDICATED_ROUTE constraint in the .xdc file to demote this message to a WARNING. However, the use of this override is highly discouraged. These examples can be used directly in the .xdc file to override this clock rule.
+	< set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets CLK_DISPLAY_IBUF] >
+
+	CLK_DISPLAY_IBUF_inst (IBUF.O) is locked to N6
+	CLK_DISPLAY_IBUF_BUFG_inst (BUFG.I) cannot be placed
+
+Related violations: <none>
+
+PLCK-12#2 Error
+Clock Placer Checks  
+Poor placement for routing between an IO pin and BUFG. 
+Resolution: Poor placement of an IO pin and a BUFG has resulted in the router using a non-dedicated path between the two.  There are several things that could trigger this DRC, each of which can cause unpredictable clock insertion delays that result in poor timing.  This DRC could be caused by any of the following: (a) a clock port was placed on a pin that is not a CCIO-pin (b)the BUFG has not been placed in the same half of the device or SLR as the CCIO-pin (c) a single ended clock has been placed on the N-Side of a differential pair CCIO-pin.
+ If this sub optimal condition is acceptable for this design, you may use the CLOCK_DEDICATED_ROUTE constraint in the .xdc file to demote this message to a WARNING. However, the use of this override is highly discouraged. These examples can be used directly in the .xdc file to override this clock rule.
+	< set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets CLK_IBUF] >
+
+	CLK_IBUF_inst (IBUF.O) is locked to M6
+	CLK_IBUF_BUFG_inst (BUFG.I) cannot be placed
+
+Related violations: <none>
+
+UTLZ-1#1 Error
+Resource utilization  - PBlock:ROOT
+FDRE over-utilized in Top Level Design (This design requires more FDRE cells than are available in the target device. This design requires 74880 of such cell types but only 65650 compatible sites are available in the target device. Please analyze your synthesis results and constraints to ensure the design is mapped to Xilinx primitives as expected. If so, please consider targeting a larger device.)ROOT
+Related violations: <none>
+
+UTLZ-1#2 Error
+Resource utilization  - PBlock:ROOT
+LUT as Logic over-utilized in Top Level Design (This design requires more LUT as Logic cells than are available in the target device. This design requires 99149 of such cell types but only 32600 compatible sites are available in the target device. Please analyze your synthesis results and constraints to ensure the design is mapped to Xilinx primitives as expected. If so, please consider targeting a larger device. Please set tcl parameter "drc.disableLUTOverUtilError" to 1 to change this error to warning.)ROOT
+Related violations: <none>
+
+UTLZ-1#3 Error
+Resource utilization  - PBlock:ROOT
+LUT6 over-utilized in Top Level Design (This design requires more LUT6 cells than are available in the target device. This design requires 35900 of such cell types but only 32600 compatible sites are available in the target device. Please analyze your synthesis results and constraints to ensure the design is mapped to Xilinx primitives as expected. If so, please consider targeting a larger device.)ROOT
+Related violations: <none>
+
+UTLZ-1#4 Error
+Resource utilization  - PBlock:ROOT
+Register as Flip Flop over-utilized in Top Level Design (This design requires more Register as Flip Flop cells than are available in the target device. This design requires 74942 of such cell types but only 65200 compatible sites are available in the target device. Please analyze your synthesis results and constraints to ensure the design is mapped to Xilinx primitives as expected. If so, please consider targeting a larger device.)ROOT
+Related violations: <none>
+
+UTLZ-1#5 Error
+Resource utilization  - PBlock:ROOT
+Slice LUTs over-utilized in Top Level Design (This design requires more Slice LUTs cells than are available in the target device. This design requires 99149 of such cell types but only 32600 compatible sites are available in the target device. Please analyze your synthesis results and constraints to ensure the design is mapped to Xilinx primitives as expected. If so, please consider targeting a larger device. Please set tcl parameter "drc.disableLUTOverUtilError" to 1 to change this error to warning.)ROOT
+Related violations: <none>
+
+UTLZ-1#6 Error
+Resource utilization  - PBlock:ROOT
+Slice Registers over-utilized in Top Level Design (This design requires more Slice Registers cells than are available in the target device. This design requires 74943 of such cell types but only 65200 compatible sites are available in the target device. Please analyze your synthesis results and constraints to ensure the design is mapped to Xilinx primitives as expected. If so, please consider targeting a larger device.)ROOT
+Related violations: <none>
+
+PLHOLDVIO-2#1 Warning
+Non-Optimal connections which could lead to hold violations  
+A LUT PIX_CNT_DISPLAY/t_cnt[2]_i_2 is driving clock pin of 3 cells. This could lead to large hold time violations. First few involved cells are:
+    CONVERTER_CNT_DISPLAY/t_cnt_reg[0] {FDCE}
+    CONVERTER_CNT_DISPLAY/t_cnt_reg[1] {FDCE}
+    CONVERTER_CNT_DISPLAY/t_cnt_reg[2] {FDCE}
+
+Related violations: <none>
+
 

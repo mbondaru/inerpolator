@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company: IP Bondaruk
+-- Engineer: Maksim Bondaruk 
 -- 
 -- Create Date: 08/10/2024 07:15:24 AM
 -- Design Name: 
@@ -35,7 +35,7 @@ use IEEE.numeric_std.all;
 entity counter_3b is
   Port ( 
        RESET,CLK,LD,UP : in std_logic;
-       DIN : in std_logic_vector (2 downto 0);
+       --DIN : in std_logic_vector (2 downto 0);
        COUNT : out std_logic_vector (2 downto 0)
   );
 end counter_3b;
@@ -43,7 +43,7 @@ end counter_3b;
 architecture Behavioral of counter_3b is
 
   signal t_cnt : unsigned(2 downto 0);
-  signal max_cnt : unsigned(2 downto 0) := unsigned(DIN);
+  --signal max_cnt : unsigned(2 downto 0) := unsigned(DIN);
 begin
 process (CLK, RESET)
 begin
@@ -53,9 +53,6 @@ elsif (rising_edge(CLK)) then
   if (LD = '1') then
   --t_cnt <= unsigned(DIN); -- load
 --else
-    if (t_cnt = max_cnt) then
-      t_cnt <= "000";
-    else
       if (UP = '1') then 
         t_cnt <= t_cnt + 1; -- incr
       else
@@ -63,7 +60,6 @@ elsif (rising_edge(CLK)) then
       end if;
     end if;
   end if;
-end if;
 end process;
 COUNT <= std_logic_vector(t_cnt);
 
